@@ -109,7 +109,7 @@ const BreedDetailsScreen: React.FC<BreedDetailsScreenProps> = ({ route }) => {
               source={{ uri: item.medium || item.url || item.large }} 
               testID="gallery-image"
               style={styles.galleryImage}
-              resizeMode="cover"
+              resizeMode="contain"
             />
             <View style={styles.attributionBadge}>
               <Text style={styles.attributionText}>
