@@ -76,7 +76,7 @@ const FilterModal: React.FC<FilterModalProps> = ({ visible, onClose }) => {
     const currentValue = traitThresholds[traitKey] || 0;
     
     return (
-      <View style={styles.traitRow}>
+      <View key={traitKey} style={styles.traitRow}>
         <Text style={[styles.sectionSubtitle, { color: colors.mutedText }]}>{label} (Min Score)</Text>
         <View style={styles.thresholdContainer}>
           {[1, 2, 3, 4, 5].map((score) => (
