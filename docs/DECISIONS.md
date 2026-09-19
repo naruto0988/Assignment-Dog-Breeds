@@ -24,19 +24,21 @@ This record captures implementation decisions that affect architecture, performa
 
 **Decision:** Use `expo-sqlite` for the offline-first persistence layer.
 
-**Rationale:** The app stores roughly 283 nested records containing traits, images, and descriptions. SQLite provides durable local storage and transactional writes. Frequently displayed fields are stored in columns, while the complete API record is retained in the `data` JSON column for the details screen. The current schema does not add secondary indexes because the dataset is small; indexes can be added when query volume or dataset size justifies them.
+**Rationale:** The app stores roughly 283 rich records containing nested traits, coat, origin, aliases, sources, and images. SQLite provides durable local storage and transactional writes. Frequently displayed fields are stored in columns, while the complete API record is retained in the `data` JSON column for the details screen. Groups and sync metadata have dedicated tables. The current schema does not add secondary indexes because the dataset is small; indexes can be added when query volume or dataset size justifies them.
 
 ## 5. API and Synchronization: TanStack Query
 
 **Decision:** Use TanStack Query for server-state lifecycle management.
 
-**Rationale:** TanStack Query owns the asynchronous loading, fetching, and error states exposed to the list screen. `useSyncBreeds` writes fresh records to SQLite and then reads the local database, so the UI has one consistent local source. The hook currently sets `retry: false`; network failures are handled by falling back to cached records rather than retrying automatically.
+**Rationale:** TanStack Query owns asynchronous loading, fetching, and error states exposed to the list screen. `useSyncBreeds` exposes SQLite as initial data, refreshes in the background, and retries transient failures with exponential backoff while preserving cached records.
 
 ## 6. List Rendering: FlashList
 
 **Decision:** Use Shopify FlashList for the breed list.
 
 **Rationale:** The 283 breed rows include images and nested layout elements. FlashList virtualizes and recycles rows, reducing the mounted view count and helping maintain smooth scrolling. Stable breed IDs are used as row keys, and `BreedCard` is memoized to avoid unnecessary renders.
+
+The rows are heavier than flat records: each may carry nested traits, coat, origin, aliases, and up to nine image variants. FlashList reduces mounted view count, while `expo-image` uses thumbnail URLs for rows, downscaling and disk caching to limit image memory. This is a deliberate trade-off between rich offline records and bounded rendering cost.
 
 ## 7. Fetch Strategy: Aggregated Pre-fetch
 

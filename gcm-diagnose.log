@@ -1,0 +1,216 @@
+﻿Diagnose log at 2026-09-19T16:03:06Z
+
+AppPath: C:\Program Files\Git\mingw64\bin\git-credential-manager.exe
+InstallDir: C:\Program Files\Git\mingw64\bin\
+Version: 2.8.0+d5e8a3442d48cc5efe7014e093e44242c0bd395f
+
+------------
+Diagnostic: Environment
+Skipped: False
+Success: True
+Exception: None
+Log:
+OSType: Windows
+OSVersion: 10.0 (build 26200)
+Reading environment variables... OK
+ Variables:
+SESSIONNAME=Console
+WINDIR=C:\Windows
+MSYSTEM=MINGW64
+GIT_CONFIG_VALUE_2=
+GIT_CONFIG_KEY_2=core.fsmonitor
+PROCESSOR_IDENTIFIER=AMD64 Family 25 Model 68 Stepping 1, AuthenticAMD
+EFC_6696_4126798990=1
+PROCESSOR_ARCHITECTURE=AMD64
+ONEDRIVE=C:\Users\ADITYA SAMBYAL\OneDrive
+PATHEXT=.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC;.CPL
+NODEFAULTCURRENTDIRECTORYINEXEPATH=1
+PUBLIC=C:\Users\Public
+CLAUDE_CODE_DISABLE_PRECOMPACT_SKIP=1
+COPILOT_CLI_RUN_AS_NODE=1
+MXC_BIN_DIR=c:\Users\ADITYA SAMBYAL\AppData\Local\Programs\Microsoft VS Code\7debcd0e2a\resources\app\node_modules.asar.unpacked\@microsoft\mxc-sdk\bin
+PROGRAMDATA=C:\ProgramData
+GIT_CONFIG_VALUE_1=never
+EFC_6696_1592913036=1
+TEMP=C:\Users\ADITYA~1\AppData\Local\Temp
+USERPROFILE=C:\Users\ADITYA SAMBYAL
+GIT_ASKPASS=
+TERM=xterm-256color
+PROGRAMFILES=C:\Program Files
+GCM_INTERACTIVE=Never
+COMMONPROGRAMFILES(X86)=C:\Program Files (x86)\Common Files
+ONEDRIVECONSUMER=C:\Users\ADITYA SAMBYAL\OneDrive
+CHROME_CRASHPAD_PIPE_NAME=\\.\pipe\crashpad_19068_CSRHYDIMCCDIAGFN
+GIT_EXEC_PATH=C:/Program Files/Git/mingw64/libexec/git-core
+EFC_6696_2283032206=1
+COMMONPROGRAMFILES=C:\Program Files\Common Files
+DRIVERDATA=C:\Windows\System32\Drivers\DriverData
+PATH=C:/Program Files/Git/mingw64/libexec/git-core;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Users\ADITYA SAMBYAL\bin;C:\Program Files\Microsoft\jdk-17.0.19.10-hotspot\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\ProgramData\chocolatey\bin;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;C:\Users\ADITYA SAMBYAL\AppData\Local\Microsoft\WindowsApps;C:\Users\ADITYA SAMBYAL\AppData\Roaming\npm;C:\Android\Sdk\platform-tools;C:\Users\ADITYA SAMBYAL\AppData\Local\Programs\Microsoft VS Code\bin;;c:\Users\ADITYA SAMBYAL\AppData\Local\Programs\Microsoft VS Code\7debcd0e2a\resources\app\node_modules.asar.unpacked\@vscode\ripgrep-universal\bin\win32-x64
+GIT_TERMINAL_PROMPT=0
+LOCALAPPDATA=C:\Users\ADITYA SAMBYAL\AppData\Local
+SSH_ASKPASS=
+COMMONPROGRAMW6432=C:\Program Files\Common Files
+CHOCOLATEYLASTPATHUPDATE=134281788759659245
+GIT_CONFIG_KEY_0=safe.bareRepository
+LC_CTYPE=C.UTF-8
+AI_AGENT=github_copilot_vscode_agent
+HOMEPATH=\Users\ADITYA SAMBYAL
+EFC_6696_2775293581=1
+GIT_CONFIG_VALUE_0=explicit
+USERDOMAIN=LAPTOP-QHKJN34N
+ALLUSERSPROFILE=C:\ProgramData
+USE_BUILTIN_RIPGREP=false
+SYSTEMROOT=C:\Windows
+EFC_6696_1262719628=1
+NUMBER_OF_PROCESSORS=16
+USERDOMAIN_ROAMINGPROFILE=LAPTOP-QHKJN34N
+COPILOT_AGENT_SESSION_ID=a778105f-4ee1-4868-9c2b-d568279925b2
+PROCESSOR_REVISION=4401
+EFC_6696_3789132940=1
+PLINK_PROTOCOL=ssh
+PROGRAMFILES(X86)=C:\Program Files (x86)
+GIT_CONFIG_COUNT=3
+TMP=C:\Users\ADITYA~1\AppData\Local\Temp
+COPILOT_CLI=1
+GIT_OPTIONAL_LOCKS=0
+RUBBER_DUCK_AGENT=true
+GIT_TRACE2_PARENT_SID=ac2a178d-7e31-4b3f-be69-5a8078504bc9
+COPILOT_ENABLE_BUILTIN_GITHUB_MCP=true
+ANTHROPIC_ADVISOR=false
+OS=Windows_NT
+GIT_CONFIG_KEY_1=credential.interactive
+HOMEDRIVE=C:
+SYSTEMDRIVE=C:
+USERNAME=ADITYA SAMBYAL
+HOME=C:\Users\ADITYA SAMBYAL
+LOGONSERVER=\\LAPTOP-QHKJN34N
+JAVA_HOME=C:\Program Files\Microsoft\jdk-17.0.19.10-hotspot\
+COPILOT_MCP_APPS=true
+TMPDIR=C:\Users\ADITYA~1\AppData\Local\Temp
+APPDATA=C:\Users\ADITYA SAMBYAL\AppData\Roaming
+CHOCOLATEYINSTALL=C:\ProgramData\chocolatey
+COMPUTERNAME=LAPTOP-QHKJN34N
+AUTO_APPROVAL=true
+COMSPEC=C:\Windows\system32\cmd.exe
+PROGRAMW6432=C:\Program Files
+PSMODULEPATH=C:\Users\ADITYA SAMBYAL\Documents\WindowsPowerShell\Modules;C:\Program Files\WindowsPowerShell\Modules;C:\Windows\system32\WindowsPowerShell\v1.0\Modules
+POWERSHELL_UPDATECHECK=Off
+COLORTERM=truecolor
+PROCESSOR_LEVEL=25
+ANDROID_HOME=C:\Android\Sdk
+
+
+------------
+Diagnostic: File system
+Skipped: False
+Success: True
+Exception: None
+Log:
+Temporary directory is 'C:\Users\ADITYA SAMBYAL\AppData\Local\Temp\'...
+Checking basic file I/O...
+Writing to temporary file 'C:\Users\ADITYA SAMBYAL\AppData\Local\Temp\d3c64f53907f8dd57ad68112'... OK
+Reading from temporary file 'C:\Users\ADITYA SAMBYAL\AppData\Local\Temp\d3c64f53907f8dd57ad68112'... OK
+Deleting temporary file 'C:\Users\ADITYA SAMBYAL\AppData\Local\Temp\d3c64f53907f8dd57ad68112'... OK
+Testing IFileSystem instance...
+UserHomePath: C:\Users\ADITYA SAMBYAL
+UserDataDirectoryPath: C:\Users\ADITYA SAMBYAL\.gcm
+GetCurrentDirectory(): C:\PROJECTS\Assignment-Dog-Breeds
+
+------------
+Diagnostic: Networking
+Skipped: False
+Success: True
+Exception: None
+Log:
+Checking networking and HTTP stack...
+Creating HTTP client... OK
+IsNetworkAvailable: True
+Sending HEAD request to http://example.com... OK
+Sending HEAD request to https://example.com... OK
+Acquiring free TCP port... OK
+Testing local HTTP loopback connections...
+Creating new HTTP listener for http://localhost:53976/... OK
+Waiting for loopback connection... OK
+Writing response... OK
+Waiting for response data... OK
+Loopback connection data OK
+
+------------
+Diagnostic: Git
+Skipped: False
+Success: True
+Exception: None
+Log:
+Getting Git version... OK
+Git version is '2.55.0.windows.2'
+Locating current repository...Git repository at 'C:/PROJECTS/Assignment-Dog-Breeds/.git'
+ OK
+Listing all Git configuration... OK
+Git configuration:
+file:C:/Program Files/Git/etc/gitconfig	diff.astextplain.textconv=astextplain
+file:C:/Program Files/Git/etc/gitconfig	filter.lfs.clean=git-lfs clean -- %f
+file:C:/Program Files/Git/etc/gitconfig	filter.lfs.smudge=git-lfs smudge -- %f
+file:C:/Program Files/Git/etc/gitconfig	filter.lfs.process=git-lfs filter-process
+file:C:/Program Files/Git/etc/gitconfig	filter.lfs.required=true
+file:C:/Program Files/Git/etc/gitconfig	http.sslbackend=schannel
+file:C:/Program Files/Git/etc/gitconfig	core.autocrlf=true
+file:C:/Program Files/Git/etc/gitconfig	core.fscache=true
+file:C:/Program Files/Git/etc/gitconfig	core.symlinks=false
+file:C:/Program Files/Git/etc/gitconfig	pull.rebase=false
+file:C:/Program Files/Git/etc/gitconfig	credential.helper=manager
+file:C:/Program Files/Git/etc/gitconfig	credential.https://dev.azure.com.usehttppath=true
+file:C:/Program Files/Git/etc/gitconfig	init.defaultbranch=master
+file:C:/Users/ADITYA SAMBYAL/.gitconfig	user.name=naruto0988
+file:C:/Users/ADITYA SAMBYAL/.gitconfig	user.email=aditysambyal01@gmail.com
+file:.git/config	core.repositoryformatversion=0
+file:.git/config	core.filemode=false
+file:.git/config	core.bare=false
+file:.git/config	core.logallrefupdates=true
+file:.git/config	core.symlinks=false
+file:.git/config	core.ignorecase=true
+file:.git/config	remote.origin.url=https://github.com/naruto0988/Assignment-Dog-Breeds.git
+file:.git/config	remote.origin.fetch=+refs/heads/*:refs/remotes/origin/*
+file:.git/config	branch.main.remote=origin
+file:.git/config	branch.main.merge=refs/heads/main
+file:.git/config	user.name=Copilot
+file:.git/config	user.email=223556219+Copilot@users.noreply.github.com
+command line:	safe.barerepository=explicit
+command line:	credential.interactive=never
+command line:	core.fsmonitor=
+
+
+------------
+Diagnostic: Credential storage
+Skipped: False
+Success: True
+Exception: None
+Log:
+ICredentialStore instance is of type: CredentialStore
+Writing test credential... OK
+Reading test credential... OK
+Deleting test credential... OK
+
+------------
+Diagnostic: Microsoft authentication (AAD/MSA)
+Skipped: False
+Success: True
+Exception: None
+Log:
+Broker is not enabled.
+Flow type is: Auto
+Gathering MSAL token cache data... OK
+CacheDirectory: C:\Users\ADITYA SAMBYAL\AppData\Local\.IdentityService
+CacheFileName: msal.cache
+CacheFilePath: C:\Users\ADITYA SAMBYAL\AppData\Local\.IdentityService\msal.cache
+Creating cache helper... OK
+Verifying MSAL token cache persistence... OK
+
+------------
+Diagnostic: GitHub API
+Skipped: False
+Success: True
+Exception: None
+Log:
+Using 'https://github.com/' as API target.
+Querying '/meta' endpoint... OK
+

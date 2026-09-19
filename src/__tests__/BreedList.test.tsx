@@ -24,8 +24,13 @@ jest.mock('../components/FilterModal', () => {
 jest.mock('@shopify/flash-list', () => {
 	const React = require('react');
 	const { View } = require('react-native');
+	interface MockFlashListProps {
+		data: unknown[];
+		renderItem: (params: { item: unknown; index: number }) => React.ReactNode;
+		ListEmptyComponent?: React.ReactNode;
+	}
 	return {
-		FlashList: ({ data, renderItem, ListEmptyComponent }: any) => (
+		FlashList: ({ data, renderItem, ListEmptyComponent }: MockFlashListProps) => (
 			<View>
 				{data.length > 0
 					? data.map((item: unknown, index: number) => (

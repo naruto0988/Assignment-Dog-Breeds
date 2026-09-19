@@ -11,28 +11,42 @@ import {
 } from 'react-native';
 import { useBreedStore } from '../store/useBreedStore';
 import { useTheme } from '../theme/ThemeContext';
+import { useSyncBreeds } from '../hooks/useSyncBreeds';
 
 interface FilterModalProps {
   visible: boolean;
   onClose: () => void;
 }
 
-const GROUPS = [
+const FALLBACK_GROUPS = [
   'Herding', 'Hound', 'Sporting', 'Terrier', 'Toy', 
   'Working', 'Non-Sporting', 'Miscellaneous', 'Foundation Stock Service'
 ];
 const SIZES = ['Small', 'Medium', 'Large', 'Giant'];
 const COATS = ['Short', 'Medium', 'Long', 'Wire'];
+const TRAITS = [
+  ['Energy', 'energy'],
+  ['Barking', 'barking'],
+  ['Drooling', 'drooling'],
+  ['Grooming', 'grooming'],
+  ['Shedding', 'shedding'],
+  ['Trainability', 'trainability'],
+  ['Good with Dogs', 'good_with_dogs'],
+  ['Good with Children', 'good_with_children'],
+  ['Good with Strangers', 'good_with_strangers'],
+  ['Apartment Friendly', 'apartment_friendly'],
+];
 
 const FilterModal: React.FC<FilterModalProps> = ({ visible, onClose }) => {
   const { colors } = useTheme();
+  const { groups } = useSyncBreeds();
   const {
     selectedGroups, toggleGroup,
     selectedSizes, toggleSize,
     selectedCoats, toggleCoat,
     hypoallergenicOnly, setHypoallergenic,
     traitThresholds, setTraitThreshold,
-    clearFilters
+    clearFilters,
   } = useBreedStore();
 
   const renderPills = (
@@ -104,7 +118,7 @@ const FilterModal: React.FC<FilterModalProps> = ({ visible, onClose }) => {
 
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <Text style={[styles.sectionTitle, { color: colors.text }]}>Breed Group</Text>
-          {renderPills(GROUPS, selectedGroups, toggleGroup)}
+          {renderPills(groups.length > 0 ? groups.map((group) => group.name) : FALLBACK_GROUPS, selectedGroups, toggleGroup)}
 
           <Text style={[styles.sectionTitle, { color: colors.text }]}>Size</Text>
           {renderPills(SIZES, selectedSizes, toggleSize)}
@@ -122,9 +136,7 @@ const FilterModal: React.FC<FilterModalProps> = ({ visible, onClose }) => {
           </View>
 
           <Text style={[styles.sectionTitle, { color: colors.text }]}>Trait Minimums</Text>
-          {renderTraitThreshold('Good with Children', 'good_with_children')}
-          {renderTraitThreshold('Good with Dogs', 'good_with_other_dogs')}
-          {renderTraitThreshold('Trainability', 'trainability')}
+          {TRAITS.map(([label, key]) => renderTraitThreshold(label, key))}
           
         </ScrollView>
       </SafeAreaView>

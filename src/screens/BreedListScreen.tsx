@@ -17,11 +17,13 @@ const BreedListScreen: React.FC<BreedListScreenProps> = ({ navigation }) => {
     data: breeds = [],
     isLoading, // True ONLY on first ever load when DB is empty
     isFetching, // True during background refetch
-    isError, // True if background refetch failed (offline)
-    refetch
+    isError,
+    refetch,
+    groups = [],
+    lastSyncedAt,
   } = useSyncBreeds();
 
-  const { searchQuery, setSearchQuery, hypoallergenicOnly } = useBreedStore();
+  const { searchQuery, setSearchQuery, hypoallergenicOnly, selectedGroups, selectedSizes, selectedCoats, traitThresholds } = useBreedStore();
 
   const [isFilterVisible, setFilterVisible] = useState(false);
 const debouncedSearchQuery = useDebounce(searchQuery, 300);
@@ -33,13 +35,32 @@ const filteredBreeds = useMemo(() => {
       // 2. Safety fallbacks in case a breed has missing data
       const safeQuery = debouncedSearchQuery || '';
       const safeName = breed.name || '';
+      const otherNames = breed.rawAttributes.other_names ?? [];
+      const groupName = groups.find((group) => group.id === breed.groupId)?.name ?? '';
+      const normalizedGroupName = groupName.toLowerCase().replace(/\s+group$/, '');
+      const coatLength = (breed.rawAttributes.coat?.length ?? '').toLowerCase();
+      const maxWeight = Math.max(
+        breed.rawAttributes.male_weight?.max ?? 0,
+        breed.rawAttributes.female_weight?.max ?? 0,
+      );
+      const size = maxWeight <= 10 ? 'Small' : maxWeight <= 25 ? 'Medium' : maxWeight <= 45 ? 'Large' : 'Giant';
+      const traits = breed.rawAttributes.traits ?? {};
 
-      const matchesSearch = safeName.toLowerCase().includes(safeQuery.toLowerCase());
+      const matchesSearch = [safeName, ...otherNames].some((value) => value.toLowerCase().includes(safeQuery.toLowerCase()));
       const matchesHypo = hypoallergenicOnly ? breed.hypoallergenic : true;
+      const matchesGroup = selectedGroups.length === 0 || selectedGroups.some((selectedGroup) =>
+        normalizedGroupName === selectedGroup.toLowerCase().replace(/\s+group$/, ''),
+      );
+      const matchesSize = selectedSizes.length === 0 || selectedSizes.includes(size);
+      const matchesCoat = selectedCoats.length === 0 || selectedCoats.some((coat) => coat.toLowerCase() === coatLength);
+      const matchesTraits = Object.entries(traitThresholds).every(([trait, threshold]) => {
+        const value = traits[trait as keyof typeof traits];
+        return typeof value === 'number' && value >= threshold;
+      });
 
-      return matchesSearch && matchesHypo;
+      return matchesSearch && matchesHypo && matchesGroup && matchesSize && matchesCoat && matchesTraits;
     });
-  }, [breeds, debouncedSearchQuery, hypoallergenicOnly]);
+  }, [breeds, debouncedSearchQuery, groups, hypoallergenicOnly, selectedGroups, selectedSizes, selectedCoats, traitThresholds]);
   const renderItem = useCallback(({ item }: { item: BreedItem }) => (
     <BreedCard
       breed={item}
@@ -67,6 +88,11 @@ const filteredBreeds = useMemo(() => {
       {isError && !isFetching && (
         <View style={[styles.syncBanner, { backgroundColor: colors.dangerSoft }]}>
           <Text style={[styles.errorText, { color: colors.danger }]}>Offline mode. Showing cached data.</Text>
+        </View>
+      )}
+      {lastSyncedAt && !isFetching && (
+        <View style={[styles.syncBanner, { backgroundColor: colors.input }]}>
+          <Text style={[styles.syncText, { color: colors.mutedText }]}>Last synced {new Date(lastSyncedAt).toLocaleString()}</Text>
         </View>
       )}
 

@@ -31,7 +31,7 @@ export default function AppNavigator() {
         />
         <Stack.Screen 
           name="BreedDetails" 
-          component={BreedDetailsScreen as any} // Cast temporarily until component is created
+          component={BreedDetailsScreen}
           options={({ route }) => ({ 
             title: route.params.breed.name,
             headerBackTitle: 'Back' 

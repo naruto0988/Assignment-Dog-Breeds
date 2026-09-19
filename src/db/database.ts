@@ -1,5 +1,5 @@
 import * as SQLite from 'expo-sqlite';
-import { DogApiBreed, BreedItem } from '../types/dog';
+import { DogApiBreed, BreedItem, GroupItem } from '../types/dog';
 
 // Opens or creates the database synchronously
 const db = SQLite.openDatabaseSync('tripare_dogs.db');
@@ -12,6 +12,14 @@ export const initDatabase = () => {
       group_id TEXT,
       hypoallergenic INTEGER,
       data TEXT NOT NULL
+    );
+    CREATE TABLE IF NOT EXISTS groups (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL
+    );
+    CREATE TABLE IF NOT EXISTS sync_metadata (
+      key TEXT PRIMARY KEY,
+      value TEXT NOT NULL
     );
   `);
 };
@@ -51,4 +59,29 @@ export const getBreedsFromDb = (): BreedItem[] => {
     description: JSON.parse(row.data).attributes.description,
     rawAttributes: JSON.parse(row.data).attributes,
   }));
+};
+
+export const saveGroupsToDb = (groups: GroupItem[]) => {
+  const statement = db.prepareSync('INSERT OR REPLACE INTO groups (id, name) VALUES ($id, $name)');
+  try {
+    db.withTransactionSync(() => {
+      groups.forEach((group) => statement.executeSync({ $id: group.id, $name: group.name }));
+    });
+  } finally {
+    statement.finalizeSync();
+  }
+};
+
+export const getGroupsFromDb = (): GroupItem[] => db.getAllSync<GroupItem>('SELECT id, name FROM groups ORDER BY name ASC');
+
+export const setSyncTimestamp = (timestamp: string) => {
+  db.runSync('INSERT OR REPLACE INTO sync_metadata (key, value) VALUES ($key, $value)', {
+    $key: 'lastSyncedAt',
+    $value: timestamp,
+  });
+};
+
+export const getSyncTimestamp = (): string | null => {
+  const row = db.getFirstSync<{ value: string }>('SELECT value FROM sync_metadata WHERE key = $key', { $key: 'lastSyncedAt' });
+  return row?.value ?? null;
 };

@@ -19,7 +19,7 @@ npm run ios
 npm run android
 ```
 
-The current API client uses the public Dog API URL directly and does not require environment variables at runtime. The `.env` copy step is retained as the project setup contract; add `.env.example` when environment-specific configuration is introduced.
+The API base URL is configurable through `EXPO_PUBLIC_API_URL`; the example file points to the public Dog API and requires no key.
 
 Available commands:
 
@@ -33,7 +33,7 @@ npm run web    # Start the web target
 
 Breed Explorer is built on Expo SDK 57, React Native, TypeScript, and React Navigation. The list screen reads normalized breed records from a local SQLite database, applies search and filter state locally, and renders results with Shopify FlashList. The detail screen receives the selected record through typed navigation and exposes Overview, Traits, and Gallery tabs.
 
-Synchronization is cache-first. On query execution, the app initializes SQLite, fetches all pages from the Dog API concurrently, saves the response in one transaction, and then reads the local database as the UI-facing source of truth. If the request fails, the existing cache is still returned, allowing previously synchronized breeds to remain available offline.
+Synchronization is cache-first. Existing SQLite records are exposed immediately while TanStack Query refreshes all 48-record API pages in the background, persists groups and a sync timestamp, and retries transient failures with exponential backoff. Foreground and network-reconnection events trigger another refresh. If a request fails, the existing cache remains visible with an offline/error indicator.
 
 ```mermaid
 flowchart LR
@@ -69,11 +69,12 @@ Expo SQLite provides durable on-device storage and transactional writes for the 
 
 The app uses a stale-while-revalidate style flow:
 
-1. Initialize the local database.
-2. Attempt a fresh API fetch with a 10-second timeout.
-3. Replace cached rows in a SQLite transaction when fresh data is available.
-4. Read the database for display in both online and offline states.
-5. If the network request fails, keep showing cached records and display the offline banner.
+1. Initialize the local database and expose cached rows as initial query data.
+2. Attempt a fresh API fetch with a 10-second timeout and exponential retry.
+3. Replace cached rows in a SQLite transaction and refresh the groups table when fresh data is available.
+4. Persist and display the last successful sync timestamp.
+5. Refresh on app foreground and network reconnection.
+6. If the network request fails, keep showing cached records and display the offline banner.
 
 Search is local and debounced by 300 ms, so it remains responsive without requiring network access.
 
@@ -99,6 +100,7 @@ For a comparable report, build a release variant and record the JavaScript bundl
 - **Filtering:** Search is debounced by 300 ms and derived with `useMemo`, avoiding a full filter pass on every keystroke.
 - **List rows:** Breed cards are memoized and use fixed image dimensions to reduce unnecessary layout work.
 - **Detail gallery:** Gallery images are mounted only when the Gallery tab is selected and are rendered with a horizontal `FlatList`.
+- **Image cache:** `expo-image` caches thumbnails and medium gallery images to disk, downscales them to the view, and uses a bounded iOS disk/memory cache configuration.
 - **FPS during interactions:** The target is 60 FPS during scrolling, filtering, navigation, and gallery paging. No device profiler capture is checked into this repository, so this remains a target rather than a measured result.
 
 ### Profiler screenshot: full 283-breed list render

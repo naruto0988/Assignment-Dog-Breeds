@@ -1,7 +1,8 @@
 import React, { memo } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { BreedItem } from '../types/dog';
 import { useTheme } from '../theme/ThemeContext';
+import CachedImage from './CachedImage';
 
 interface BreedCardProps {
   breed: BreedItem;
@@ -21,10 +22,11 @@ const BreedCard: React.FC<BreedCardProps> = ({ breed, onPress }) => {
     >
       {/* Thumbnail Image */}
       {thumbnailUri ? (
-        <Image 
-          source={{ uri: thumbnailUri }} 
+        <CachedImage
+          uri={thumbnailUri}
           style={styles.thumbnail} 
-          resizeMode="cover"
+          contentFit="cover"
+          recyclingKey={breed.id}
         />
       ) : (
         <View style={[styles.thumbnail, styles.placeholder, { backgroundColor: colors.input }]}>

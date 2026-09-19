@@ -55,6 +55,7 @@ The complete API record is stored as a JSON blob for simplicity and details-scre
 ## Image Performance
 
 - Use the API thumbnail URL for list cards and reserve larger URLs for the details gallery.
+- `expo-image` uses disk caching with stable cache keys; iOS is configured with a 50 MB disk and 20 MB memory budget.
 - Keep fixed image dimensions so row layout does not shift while images load.
 - Preserve the no-image placeholder so missing media does not cause layout changes.
 - Avoid loading gallery images until the Gallery tab is selected.

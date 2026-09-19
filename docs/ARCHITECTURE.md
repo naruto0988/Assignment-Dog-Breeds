@@ -4,8 +4,8 @@
 
 The app is an Expo React Native application with an offline-first data flow:
 
-1. Fetch breed data from the Dog API.
-2. Persist the response in Expo SQLite.
+1. Fetch breed and group data from the Dog API.
+2. Persist the response in Expo SQLite with sync metadata.
 3. Read the local database into normalized `BreedItem` records.
 4. Render the list and detail screens from the local data.
 5. Apply search and filter state locally for responsive interaction.
@@ -93,8 +93,10 @@ flowchart TD
 ### API and synchronization
 
 - `src/api/dogApi.ts` uses Axios against `https://dogapi.dog/api/v2`.
-- All paginated breed pages are fetched and merged before persistence.
+- All paginated breed pages are fetched in 48-record pages and merged before persistence.
+- `GET /groups` populates the local groups table and `GET /breeds/:id` is available for detail refreshes.
 - `src/hooks/useSyncBreeds.ts` initializes SQLite, attempts a fresh network sync, then returns database records.
+- Foreground and network-reconnection events trigger refreshes with exponential retry.
 - A failed network request does not prevent cached data from being displayed.
 
 ### Persistence
@@ -102,6 +104,7 @@ flowchart TD
 - `src/db/database.ts` creates the `breeds` table when needed.
 - Frequently used fields such as `id`, `name`, `group_id`, and `hypoallergenic` are stored in columns.
 - The complete API record is stored as JSON in `data` so nested traits, images, and measurements are retained.
+- The `groups` table stores filter labels and `sync_metadata` stores `lastSyncedAt`.
 - `getBreedsFromDb()` maps database rows into the UI-facing `BreedItem` model.
 
 ### State and presentation

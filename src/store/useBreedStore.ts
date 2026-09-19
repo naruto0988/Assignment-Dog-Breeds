@@ -7,6 +7,7 @@ interface FilterState {
   selectedCoats: string[];
   hypoallergenicOnly: boolean;
   traitThresholds: Record<string, number>; // e.g., { good_with_children: 4 }
+  setGroups: (groups: string[]) => void;
   
   setSearchQuery: (query: string) => void;
   toggleGroup: (groupId: string) => void;
@@ -26,6 +27,7 @@ export const useBreedStore = create<FilterState>((set) => ({
   traitThresholds: {},
 
   setSearchQuery: (query) => set({ searchQuery: query }),
+  setGroups: (groups) => set({ selectedGroups: groups }),
   
   toggleGroup: (groupId) => set((state) => ({
     selectedGroups: state.selectedGroups.includes(groupId)

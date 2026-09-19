@@ -6,12 +6,12 @@ import {
   ScrollView, 
   TouchableOpacity, 
   FlatList, 
-  Image, 
   Dimensions 
 } from 'react-native';
 import { BreedDetailsScreenProps } from '../types/navigation';
 import TraitBar from '../components/TraitBar';
 import { useTheme } from '../theme/ThemeContext';
+import CachedImage from '../components/CachedImage';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -34,7 +34,9 @@ const BreedDetailsScreen: React.FC<BreedDetailsScreenProps> = ({ route }) => {
     { label: 'Trainability', score: traitsData.trainability },
     { label: 'Good with Dogs', score: traitsData.good_with_dogs },
     { label: 'Good with Children', score: traitsData.good_with_children },
-    { label: 'Good with Strangers', score: traitsData.good_with_strangers }
+    { label: 'Good with Strangers', score: traitsData.good_with_strangers },
+    { label: `Exercise Minutes (${traitsData.exercise_minutes ?? 'n/a'})`, score: traitsData.exercise_minutes === undefined ? undefined : Math.max(1, Math.min(5, Math.ceil(traitsData.exercise_minutes / 20))) },
+    { label: 'Apartment Friendly', score: traitsData.apartment_friendly },
   ].filter(t => t.score !== undefined), [traitsData]); // Filter out any missing traits
 
   // 2. FIXED: Images are directly on rawAttributes.images
@@ -50,6 +52,30 @@ const BreedDetailsScreen: React.FC<BreedDetailsScreenProps> = ({ route }) => {
         <View style={[styles.statRow, { borderBottomColor: colors.border }]}>
           <Text style={[styles.statLabel, { color: colors.mutedText }]}>Life Span:</Text>
           <Text style={[styles.statValue, { color: colors.text }]}>{rawAttributes.life?.min} - {rawAttributes.life?.max} years</Text>
+        </View>
+        <View style={[styles.statRow, { borderBottomColor: colors.border }]}>
+          <Text style={[styles.statLabel, { color: colors.mutedText }]}>Male Height:</Text>
+          <Text style={[styles.statValue, { color: colors.text }]}>{rawAttributes.male_height?.min ?? 'n/a'} - {rawAttributes.male_height?.max ?? 'n/a'} cm</Text>
+        </View>
+        <View style={[styles.statRow, { borderBottomColor: colors.border }]}>
+          <Text style={[styles.statLabel, { color: colors.mutedText }]}>Female Height:</Text>
+          <Text style={[styles.statValue, { color: colors.text }]}>{rawAttributes.female_height?.min ?? 'n/a'} - {rawAttributes.female_height?.max ?? 'n/a'} cm</Text>
+        </View>
+        <View style={[styles.statRow, { borderBottomColor: colors.border }]}>
+          <Text style={[styles.statLabel, { color: colors.mutedText }]}>Origin:</Text>
+          <Text style={[styles.statValue, { color: colors.text }]}>{[rawAttributes.origin?.country, rawAttributes.origin?.region, rawAttributes.origin?.era].filter(Boolean).join(' / ') || 'n/a'}</Text>
+        </View>
+        <View style={[styles.statRow, { borderBottomColor: colors.border }]}>
+          <Text style={[styles.statLabel, { color: colors.mutedText }]}>Coat:</Text>
+          <Text style={[styles.statValue, { color: colors.text }]}>{[rawAttributes.coat?.type, rawAttributes.coat?.length].filter(Boolean).join(' / ') || 'n/a'}</Text>
+        </View>
+        <View style={[styles.statRow, { borderBottomColor: colors.border }]}>
+          <Text style={[styles.statLabel, { color: colors.mutedText }]}>Other Names:</Text>
+          <Text style={[styles.statValue, { color: colors.text }]}>{rawAttributes.other_names?.join(', ') || 'n/a'}</Text>
+        </View>
+        <View style={[styles.statRow, { borderBottomColor: colors.border }]}>
+          <Text style={[styles.statLabel, { color: colors.mutedText }]}>Recognized By:</Text>
+          <Text style={[styles.statValue, { color: colors.text }]}>{rawAttributes.recognized_by?.join(', ') || 'n/a'}</Text>
         </View>
         <View style={[styles.statRow, { borderBottomColor: colors.border }]}>
           <Text style={[styles.statLabel, { color: colors.mutedText }]}>Male Weight:</Text>
@@ -107,11 +133,12 @@ const BreedDetailsScreen: React.FC<BreedDetailsScreenProps> = ({ route }) => {
         renderItem={({ item }) => (
           <View style={styles.imageContainer}>
             {/* 3. FIXED: Using item.medium based on your JSON structure */}
-            <Image 
-              source={{ uri: item.medium || item.url || item.large }} 
+            <CachedImage
+              uri={item.medium || item.url || item.large}
+              cacheKey={item.id}
               testID="gallery-image"
               style={styles.galleryImage}
-              resizeMode="contain"
+              contentFit="contain"
             />
             <View style={[styles.attributionBadge, { backgroundColor: colors.overlay }]}>
               <Text style={styles.attributionText}>

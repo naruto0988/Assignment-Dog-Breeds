@@ -8,6 +8,8 @@ export interface DogBreedTraits {
   good_with_dogs?: number;
   good_with_children?: number;
   good_with_strangers?: number;
+  apartment_friendly?: number;
+  exercise_minutes?: number;
   temperament?: string[];
 }
 
@@ -20,7 +22,32 @@ export interface DogBreedImage {
   attribution?: {
     author?: string;
     license?: string;
+    license_url?: string;
+    source?: string;
+    source_url?: string;
   };
+}
+
+export interface BreedRange {
+  min?: number;
+  max?: number;
+}
+
+export interface BreedOrigin {
+  country?: string;
+  region?: string;
+  era?: string;
+}
+
+export interface BreedCoat {
+  type?: string;
+  length?: string;
+  colors?: string[];
+}
+
+export interface BreedSource {
+  url?: string;
+  title?: string;
 }
 
 export interface DogApiBreedAttributes {
@@ -28,9 +55,16 @@ export interface DogApiBreedAttributes {
   images?: DogBreedImage[];
   name: string;
   description: string;
-  life?: { min?: number; max?: number };
-  male_weight?: { min?: number; max?: number };
-  female_weight?: { min?: number; max?: number };
+  life?: BreedRange;
+  male_weight?: BreedRange;
+  female_weight?: BreedRange;
+  male_height?: BreedRange;
+  female_height?: BreedRange;
+  origin?: BreedOrigin;
+  coat?: BreedCoat;
+  other_names?: string[];
+  recognized_by?: string[];
+  sources?: BreedSource[];
   hypoallergenic: boolean;
 }
 
@@ -57,4 +91,9 @@ export interface ApiResponse {
   data: DogApiBreed[];
   links: { next?: string; last?: string };
   meta: { total: number };
+}
+
+export interface GroupItem {
+  id: string;
+  name: string;
 }
