@@ -10,6 +10,7 @@ import {
   SafeAreaView 
 } from 'react-native';
 import { useBreedStore } from '../store/useBreedStore';
+import { useTheme } from '../theme/ThemeContext';
 
 interface FilterModalProps {
   visible: boolean;
@@ -24,6 +25,7 @@ const SIZES = ['Small', 'Medium', 'Large', 'Giant'];
 const COATS = ['Short', 'Medium', 'Long', 'Wire'];
 
 const FilterModal: React.FC<FilterModalProps> = ({ visible, onClose }) => {
+  const { colors } = useTheme();
   const {
     selectedGroups, toggleGroup,
     selectedSizes, toggleSize,
@@ -44,10 +46,10 @@ const FilterModal: React.FC<FilterModalProps> = ({ visible, onClose }) => {
         return (
           <TouchableOpacity
             key={item}
-            style={[styles.pill, isSelected && styles.pillActive]}
+            style={[styles.pill, { backgroundColor: colors.input }, isSelected && { backgroundColor: colors.accentSoft, borderColor: colors.accent }]}
             onPress={() => onToggle(item)}
           >
-            <Text style={[styles.pillText, isSelected && styles.pillTextActive]}>
+            <Text style={[styles.pillText, { color: colors.secondaryText }, isSelected && { color: colors.accentText }]}>
               {item}
             </Text>
           </TouchableOpacity>
@@ -61,20 +63,22 @@ const FilterModal: React.FC<FilterModalProps> = ({ visible, onClose }) => {
     
     return (
       <View style={styles.traitRow}>
-        <Text style={styles.sectionSubtitle}>{label} (Min Score)</Text>
+        <Text style={[styles.sectionSubtitle, { color: colors.mutedText }]}>{label} (Min Score)</Text>
         <View style={styles.thresholdContainer}>
           {[1, 2, 3, 4, 5].map((score) => (
             <TouchableOpacity
               key={score}
               style={[
                 styles.thresholdButton,
-                currentValue >= score && styles.thresholdButtonActive
+                { backgroundColor: colors.input },
+                currentValue >= score && { backgroundColor: colors.accent }
               ]}
               onPress={() => setTraitThreshold(traitKey, currentValue === score ? 0 : score)}
             >
               <Text style={[
                 styles.thresholdText,
-                currentValue >= score && styles.thresholdTextActive
+                { color: colors.mutedText },
+                currentValue >= score && { color: colors.surface }
               ]}>
                 {score}
               </Text>
@@ -87,37 +91,37 @@ const FilterModal: React.FC<FilterModalProps> = ({ visible, onClose }) => {
 
   return (
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
-      <SafeAreaView style={styles.container}>
-        <View style={styles.header}>
+      <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+        <View style={[styles.header, { borderBottomColor: colors.border }]}>
           <TouchableOpacity onPress={clearFilters}>
-            <Text style={styles.clearText}>Clear All</Text>
+            <Text style={[styles.clearText, { color: colors.danger }]}>Clear All</Text>
           </TouchableOpacity>
-          <Text style={styles.title}>Filters</Text>
+          <Text style={[styles.title, { color: colors.text }]}>Filters</Text>
           <TouchableOpacity onPress={onClose}>
-            <Text style={styles.doneText}>Done</Text>
+            <Text style={[styles.doneText, { color: colors.accent }]}>Done</Text>
           </TouchableOpacity>
         </View>
 
         <ScrollView contentContainerStyle={styles.scrollContent}>
-          <Text style={styles.sectionTitle}>Breed Group</Text>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>Breed Group</Text>
           {renderPills(GROUPS, selectedGroups, toggleGroup)}
 
-          <Text style={styles.sectionTitle}>Size</Text>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>Size</Text>
           {renderPills(SIZES, selectedSizes, toggleSize)}
 
-          <Text style={styles.sectionTitle}>Coat Length</Text>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>Coat Length</Text>
           {renderPills(COATS, selectedCoats, toggleCoat)}
 
           <View style={styles.switchRow}>
-            <Text style={styles.sectionTitle}>Hypoallergenic Only</Text>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>Hypoallergenic Only</Text>
             <Switch 
               value={hypoallergenicOnly} 
               onValueChange={setHypoallergenic}
-              trackColor={{ true: '#007AFF', false: '#e0e0e0' }}
+              trackColor={{ true: colors.accent, false: colors.border }}
             />
           </View>
 
-          <Text style={styles.sectionTitle}>Trait Minimums</Text>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>Trait Minimums</Text>
           {renderTraitThreshold('Good with Children', 'good_with_children')}
           {renderTraitThreshold('Good with Dogs', 'good_with_other_dogs')}
           {renderTraitThreshold('Trainability', 'trainability')}
@@ -129,33 +133,29 @@ const FilterModal: React.FC<FilterModalProps> = ({ visible, onClose }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff' },
+  container: { flex: 1 },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
   },
-  title: { fontSize: 18, fontWeight: '700', color: '#1a1a1a' },
-  clearText: { fontSize: 16, color: '#ff3b30' },
-  doneText: { fontSize: 16, color: '#007AFF', fontWeight: '600' },
+  title: { fontSize: 18, fontWeight: '700' },
+  clearText: { fontSize: 16 },
+  doneText: { fontSize: 16, fontWeight: '600' },
   scrollContent: { padding: 16, paddingBottom: 40 },
-  sectionTitle: { fontSize: 16, fontWeight: '600', color: '#1a1a1a', marginTop: 24, marginBottom: 12 },
-  sectionSubtitle: { fontSize: 14, color: '#5f6368', marginBottom: 8 },
+  sectionTitle: { fontSize: 16, fontWeight: '600', marginTop: 24, marginBottom: 12 },
+  sectionSubtitle: { fontSize: 14, marginBottom: 8 },
   pillContainer: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   pill: {
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 20,
-    backgroundColor: '#f1f3f4',
     borderWidth: 1,
     borderColor: 'transparent',
   },
-  pillActive: { backgroundColor: '#e8f0fe', borderColor: '#aecbfa' },
-  pillText: { fontSize: 14, color: '#3c4043', fontWeight: '500' },
-  pillTextActive: { color: '#1967d2' },
+  pillText: { fontSize: 14, fontWeight: '500' },
   switchRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -167,13 +167,10 @@ const styles = StyleSheet.create({
   thresholdButton: {
     flex: 1,
     paddingVertical: 10,
-    backgroundColor: '#f1f3f4',
     borderRadius: 8,
     alignItems: 'center',
   },
-  thresholdButtonActive: { backgroundColor: '#007AFF' },
-  thresholdText: { fontSize: 14, color: '#5f6368', fontWeight: '600' },
-  thresholdTextActive: { color: '#fff' },
+  thresholdText: { fontSize: 14, fontWeight: '600' },
 });
 
 export default FilterModal;

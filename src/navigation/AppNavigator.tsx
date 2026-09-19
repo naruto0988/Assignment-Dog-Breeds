@@ -5,18 +5,23 @@ import BreedListScreen from '../screens/BreedListScreen';
 // We will build BreedDetailsScreen next
 import BreedDetailsScreen from '../screens/BreedDetailsScreen'; 
 import { RootStackParamList } from '../types/navigation';
+import ThemeToggle from '../components/ThemeToggle';
+import { useTheme } from '../theme/ThemeContext';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function AppNavigator() {
+  const { colors } = useTheme();
+
   return (
     <NavigationContainer>
       <Stack.Navigator 
         initialRouteName="BreedList"
         screenOptions={{
-          headerStyle: { backgroundColor: '#f8f9fa' },
-          headerTintColor: '#333',
-          headerTitleStyle: { fontWeight: '600' },
+          headerStyle: { backgroundColor: colors.surface },
+          headerTintColor: colors.text,
+          headerTitleStyle: { fontWeight: '600', color: colors.text },
+          headerRight: () => <ThemeToggle />,
         }}
       >
         <Stack.Screen 

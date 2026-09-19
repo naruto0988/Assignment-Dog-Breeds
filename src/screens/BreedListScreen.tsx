@@ -8,19 +8,21 @@ import { BreedListScreenProps } from '../types/navigation';
 import { BreedItem } from '../types/dog';
 import FilterModal from '../components/FilterModal';
 import { useDebounce } from '../hooks/useDebounce';
+import { useTheme } from '../theme/ThemeContext';
 
 const BreedListScreen: React.FC<BreedListScreenProps> = ({ navigation }) => {
+  const { colors } = useTheme();
   // Pulling cached data + sync states from React Query custom hook
-  const { 
-    data: breeds = [], 
+  const {
+    data: breeds = [],
     isLoading, // True ONLY on first ever load when DB is empty
     isFetching, // True during background refetch
     isError, // True if background refetch failed (offline)
-    refetch 
+    refetch
   } = useSyncBreeds();
 
   const { searchQuery, setSearchQuery, hypoallergenicOnly } = useBreedStore();
-  
+
   const [isFilterVisible, setFilterVisible] = useState(false);
 const debouncedSearchQuery = useDebounce(searchQuery, 300);
   // Derived state: fast filtering on the local cached DB
@@ -31,56 +33,56 @@ const filteredBreeds = useMemo(() => {
       // 2. Safety fallbacks in case a breed has missing data
       const safeQuery = debouncedSearchQuery || '';
       const safeName = breed.name || '';
-      
+
       const matchesSearch = safeName.toLowerCase().includes(safeQuery.toLowerCase());
       const matchesHypo = hypoallergenicOnly ? breed.hypoallergenic : true;
-      
+
       return matchesSearch && matchesHypo;
     });
   }, [breeds, debouncedSearchQuery, hypoallergenicOnly]);
   const renderItem = useCallback(({ item }: { item: BreedItem }) => (
-    <BreedCard 
-      breed={item} 
+    <BreedCard
+      breed={item}
       onPress={(selectedBreed) => navigation.navigate('BreedDetails', { breed: selectedBreed })}
     />
   ), [navigation]);
 
   if (isLoading && breeds.length === 0) {
     return (
-      <View style={styles.center}>
-        <ActivityIndicator size="large" color="#007AFF" />
-        <Text style={styles.loadingText}>Initializing Database...</Text>
+      <View style={[styles.center, { backgroundColor: colors.background }]}>
+        <ActivityIndicator size="large" color={colors.accent} />
+        <Text style={[styles.loadingText, { color: colors.mutedText }]}>Initializing Database...</Text>
       </View>
     );
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       {/* Network Sync Indicators */}
       {isFetching && !isLoading && (
-        <View style={styles.syncBanner}>
-          <Text style={styles.syncText}>Syncing fresh data...</Text>
+        <View style={[styles.syncBanner, { backgroundColor: colors.accentSoft }]}>
+          <Text style={[styles.syncText, { color: colors.accentText }]}>Syncing fresh data...</Text>
         </View>
       )}
       {isError && !isFetching && (
-        <View style={[styles.syncBanner, styles.errorBanner]}>
-          <Text style={styles.errorText}>Offline mode. Showing cached data.</Text>
+        <View style={[styles.syncBanner, { backgroundColor: colors.dangerSoft }]}>
+          <Text style={[styles.errorText, { color: colors.danger }]}>Offline mode. Showing cached data.</Text>
         </View>
       )}
 
       {/* Search Header */}
-   <View style={styles.header}>
+  <View style={[styles.header, { backgroundColor: colors.surface, borderBottomColor: colors.border }]}>
   <View style={styles.searchRow}>
     <TextInput
-      style={styles.searchInput}
+      style={[styles.searchInput, { backgroundColor: colors.input, color: colors.text }]}
       placeholder="Search 283 dog breeds..."
-      placeholderTextColor="#80868b"
+      placeholderTextColor={colors.placeholder}
       value={searchQuery}
       onChangeText={setSearchQuery}
       clearButtonMode="while-editing"
     />
-    <TouchableOpacity 
-      style={styles.filterButton} 
+    <TouchableOpacity
+      style={[styles.filterButton, { backgroundColor: colors.accent }]}
       onPress={() => setFilterVisible(true)}
     >
       <Text style={styles.filterButtonText}>Filter</Text>
@@ -100,26 +102,26 @@ const filteredBreeds = useMemo(() => {
           keyboardShouldPersistTaps="handled"
           ListEmptyComponent={
             <View style={styles.center}>
-              <Text style={styles.emptyText}>No breeds found matching your criteria.</Text>
+              <Text style={[styles.emptyText, { color: colors.mutedText }]}>No breeds found matching your criteria.</Text>
             </View>
           }
         />
       </View>
-      <FilterModal 
-  visible={isFilterVisible} 
-  onClose={() => setFilterVisible(false)} 
+      <FilterModal
+  visible={isFilterVisible}
+  onClose={() => setFilterVisible(false)}
 />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f8f9fa' },
+  container: { flex: 1 },
   center: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  loadingText: { marginTop: 12, color: '#5f6368' },
-  emptyText: { color: '#5f6368', fontSize: 16 },
-  header: { padding: 16, backgroundColor: '#fff', borderBottomWidth: 1, borderBottomColor: '#eee' },
-  
+  loadingText: { marginTop: 12 },
+  emptyText: { fontSize: 16 },
+  header: { padding: 16, borderBottomWidth: 1 },
+
   listContent: { paddingTop: 16, paddingBottom: 40 },
   searchRow: {
     flexDirection: 'row',
@@ -128,15 +130,12 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     flex: 1, // Takes up remaining horizontal space
-    backgroundColor: '#f1f3f4',
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderRadius: 8,
     fontSize: 16,
-    color: '#202124',
   },
   filterButton: {
-    backgroundColor: '#007AFF',
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderRadius: 8,
@@ -149,14 +148,12 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   syncBanner: {
-    backgroundColor: '#e8f0fe',
     paddingVertical: 6,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  syncText: { fontSize: 12, color: '#1967d2', fontWeight: '500' },
-  errorBanner: { backgroundColor: '#fce8e6' },
-  errorText: { fontSize: 12, color: '#c5221f', fontWeight: '500' },
+  syncText: { fontSize: 12, fontWeight: '500' },
+  errorText: { fontSize: 12, fontWeight: '500' },
 });
 
 export default BreedListScreen;

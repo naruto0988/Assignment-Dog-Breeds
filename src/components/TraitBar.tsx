@@ -1,5 +1,6 @@
 import React, { memo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { useTheme } from '../theme/ThemeContext';
 
 interface TraitBarProps {
   label: string;
@@ -7,19 +8,22 @@ interface TraitBarProps {
 }
 
 const TraitBar: React.FC<TraitBarProps> = ({ label, score }) => {
+  const { colors } = useTheme();
   // Ensure score is safely bounded between 1 and 5
   const normalizedScore = Math.max(1, Math.min(5, Math.round(score || 0)));
   
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>{label}</Text>
+      <Text style={[styles.label, { color: colors.secondaryText }]}>{label}</Text>
       <View style={styles.scale}>
         {[1, 2, 3, 4, 5].map((index) => (
           <View
             key={index}
             style={[
               styles.block,
-              index <= normalizedScore ? styles.blockFilled : styles.blockEmpty,
+              index <= normalizedScore
+                ? [styles.blockFilled, { backgroundColor: colors.accent }]
+                : [styles.blockEmpty, { backgroundColor: colors.traitEmpty }],
             ]}
           />
         ))}
@@ -37,11 +41,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 8,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: '#e0e0e0',
   },
   label: {
     fontSize: 14,
-    color: '#333',
     flex: 1,
     textTransform: 'capitalize',
   },
@@ -55,9 +57,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   blockFilled: {
-    backgroundColor: '#007AFF', // Active trait color
   },
   blockEmpty: {
-    backgroundColor: '#e0e0e0',
   },
 });

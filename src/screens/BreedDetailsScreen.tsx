@@ -11,12 +11,14 @@ import {
 } from 'react-native';
 import { BreedDetailsScreenProps } from '../types/navigation';
 import TraitBar from '../components/TraitBar';
+import { useTheme } from '../theme/ThemeContext';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 type TabType = 'Overview' | 'Traits' | 'Gallery';
 
 const BreedDetailsScreen: React.FC<BreedDetailsScreenProps> = ({ route }) => {
+  const { colors } = useTheme();
   const { breed } = route.params;
   const { rawAttributes } = breed;
   const [activeTab, setActiveTab] = useState<TabType>('Overview');
@@ -40,26 +42,26 @@ const BreedDetailsScreen: React.FC<BreedDetailsScreenProps> = ({ route }) => {
 
   const renderOverview = () => (
     <ScrollView style={styles.tabContent} contentContainerStyle={styles.scrollContent}>
-      <Text style={styles.sectionTitle}>Description</Text>
-      <Text style={styles.bodyText}>{rawAttributes.description}</Text>
+      <Text style={[styles.sectionTitle, { color: colors.text }]}>Description</Text>
+      <Text style={[styles.bodyText, { color: colors.secondaryText }]}>{rawAttributes.description}</Text>
 
-      <View style={styles.statsCard}>
-        <Text style={styles.statsTitle}>Vital Stats</Text>
-        <View style={styles.statRow}>
-          <Text style={styles.statLabel}>Life Span:</Text>
-          <Text style={styles.statValue}>{rawAttributes.life?.min} - {rawAttributes.life?.max} years</Text>
+      <View style={[styles.statsCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+        <Text style={[styles.statsTitle, { color: colors.text }]}>Vital Stats</Text>
+        <View style={[styles.statRow, { borderBottomColor: colors.border }]}>
+          <Text style={[styles.statLabel, { color: colors.mutedText }]}>Life Span:</Text>
+          <Text style={[styles.statValue, { color: colors.text }]}>{rawAttributes.life?.min} - {rawAttributes.life?.max} years</Text>
         </View>
-        <View style={styles.statRow}>
-          <Text style={styles.statLabel}>Male Weight:</Text>
-          <Text style={styles.statValue}>{rawAttributes.male_weight?.min} - {rawAttributes.male_weight?.max} kg</Text>
+        <View style={[styles.statRow, { borderBottomColor: colors.border }]}>
+          <Text style={[styles.statLabel, { color: colors.mutedText }]}>Male Weight:</Text>
+          <Text style={[styles.statValue, { color: colors.text }]}>{rawAttributes.male_weight?.min} - {rawAttributes.male_weight?.max} kg</Text>
         </View>
-        <View style={styles.statRow}>
-          <Text style={styles.statLabel}>Female Weight:</Text>
-          <Text style={styles.statValue}>{rawAttributes.female_weight?.min} - {rawAttributes.female_weight?.max} kg</Text>
+        <View style={[styles.statRow, { borderBottomColor: colors.border }]}>
+          <Text style={[styles.statLabel, { color: colors.mutedText }]}>Female Weight:</Text>
+          <Text style={[styles.statValue, { color: colors.text }]}>{rawAttributes.female_weight?.min} - {rawAttributes.female_weight?.max} kg</Text>
         </View>
-        <View style={styles.statRow}>
-          <Text style={styles.statLabel}>Hypoallergenic:</Text>
-          <Text style={styles.statValue}>{breed.hypoallergenic ? 'Yes' : 'No'}</Text>
+        <View style={[styles.statRow, { borderBottomColor: colors.border }]}>
+          <Text style={[styles.statLabel, { color: colors.mutedText }]}>Hypoallergenic:</Text>
+          <Text style={[styles.statValue, { color: colors.text }]}>{breed.hypoallergenic ? 'Yes' : 'No'}</Text>
         </View>
       </View>
     </ScrollView>
@@ -67,14 +69,14 @@ const BreedDetailsScreen: React.FC<BreedDetailsScreenProps> = ({ route }) => {
 
   const renderTraits = () => (
     <ScrollView style={styles.tabContent} contentContainerStyle={styles.scrollContent}>
-      <Text style={styles.sectionTitle}>Temperament & Traits</Text>
+      <Text style={[styles.sectionTitle, { color: colors.text }]}>Temperament & Traits</Text>
       {traitsData.temperament && (
-        <Text style={styles.bodyText}>
+        <Text style={[styles.bodyText, { color: colors.secondaryText }]}>
           {traitsData.temperament.join(', ')}
         </Text>
       )}
       
-      <View style={styles.traitsContainer}>
+      <View style={[styles.traitsContainer, { backgroundColor: colors.surface, borderColor: colors.border }]}>
         {traits.map((trait, index) => (
           <TraitBar 
             key={`${trait.label}-${index}`} 
@@ -90,7 +92,7 @@ const BreedDetailsScreen: React.FC<BreedDetailsScreenProps> = ({ route }) => {
     if (!images || images.length === 0) {
       return (
         <View style={styles.center}>
-          <Text style={styles.bodyText}>No images available for this breed.</Text>
+          <Text style={[styles.bodyText, { color: colors.secondaryText }]}>No images available for this breed.</Text>
         </View>
       );
     }
@@ -111,7 +113,7 @@ const BreedDetailsScreen: React.FC<BreedDetailsScreenProps> = ({ route }) => {
               style={styles.galleryImage}
               resizeMode="contain"
             />
-            <View style={styles.attributionBadge}>
+            <View style={[styles.attributionBadge, { backgroundColor: colors.overlay }]}>
               <Text style={styles.attributionText}>
                 {/* 4. FIXED: Safely extracting nested attribution data */}
                 © {item.attribution?.author || 'Unknown'} | {item.attribution?.license || 'Standard'}
@@ -124,17 +126,17 @@ const BreedDetailsScreen: React.FC<BreedDetailsScreenProps> = ({ route }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.tabBar}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <View style={[styles.tabBar, { backgroundColor: colors.surface, borderBottomColor: colors.border }]}>
         {(['Overview', 'Traits', 'Gallery'] as TabType[]).map((tab) => (
           <TouchableOpacity 
             key={tab}
-            style={[styles.tab, activeTab === tab && styles.activeTab]}
+            style={[styles.tab, activeTab === tab && { borderBottomColor: colors.accent }]}
             accessibilityRole="button"
             accessibilityState={{ selected: activeTab === tab }}
             onPress={() => setActiveTab(tab)}
           >
-            <Text style={[styles.tabText, activeTab === tab && styles.activeTabText]}>
+            <Text style={[styles.tabText, { color: colors.mutedText }, activeTab === tab && { color: colors.accent }] }>
               {tab}
             </Text>
           </TouchableOpacity>
@@ -151,13 +153,11 @@ const BreedDetailsScreen: React.FC<BreedDetailsScreenProps> = ({ route }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f8f9fa' },
+  container: { flex: 1 },
   center: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   tabBar: {
     flexDirection: 'row',
-    backgroundColor: '#fff',
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
     elevation: 2,
     shadowColor: '#000',
     shadowOpacity: 0.05,
@@ -172,15 +172,12 @@ const styles = StyleSheet.create({
   },
   activeTab: {
     borderBottomWidth: 2,
-    borderBottomColor: '#007AFF',
   },
   tabText: {
     fontSize: 15,
     fontWeight: '500',
-    color: '#5f6368',
   },
   activeTabText: {
-    color: '#007AFF',
     fontWeight: '700',
   },
   contentContainer: {
@@ -196,27 +193,22 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontWeight: '700',
-    color: '#1a1a1a',
     marginBottom: 12,
   },
   bodyText: {
     fontSize: 16,
     lineHeight: 24,
-    color: '#3c4043',
     marginBottom: 20,
     textTransform: 'capitalize',
   },
   statsCard: {
-    backgroundColor: '#fff',
     borderRadius: 12,
     padding: 16,
     borderWidth: 1,
-    borderColor: '#eee',
   },
   statsTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#1a1a1a',
     marginBottom: 12,
   },
   statRow: {
@@ -224,24 +216,19 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 8,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: '#f0f0f0',
   },
   statLabel: {
     fontSize: 14,
-    color: '#5f6368',
     fontWeight: '500',
   },
   statValue: {
     fontSize: 14,
-    color: '#1a1a1a',
     fontWeight: '600',
   },
   traitsContainer: {
-    backgroundColor: '#fff',
     borderRadius: 12,
     padding: 16,
     borderWidth: 1,
-    borderColor: '#eee',
   },
   imageContainer: {
     width: SCREEN_WIDTH,
@@ -259,13 +246,11 @@ const styles = StyleSheet.create({
     bottom: 30,
     left: 16,
     right: 16,
-    backgroundColor: 'rgba(0,0,0,0.6)',
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 8,
   },
   attributionText: {
-    color: '#fff',
     fontSize: 12,
     textAlign: 'center',
   },
